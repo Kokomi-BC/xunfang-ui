@@ -45,6 +45,12 @@ export default defineConfig(({ mode, command }) => {
       open: true,
       proxy: {
         // https://cn.vitejs.dev/config/#server-proxy
+        // 制造模块直连微服务（Gateway 中暂未配置 manufacture 路由）
+        '/dev-api/manufacture': {
+          target: 'http://localhost:9205',
+          changeOrigin: true,
+          rewrite: (p) => p.replace(/^\/dev-api/, '')
+        },
         '/dev-api': {
           target: 'http://localhost:8080',
           changeOrigin: true,
