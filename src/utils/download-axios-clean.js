@@ -43,3 +43,15 @@ export async function downloadWithAxios(url, filename) {
   URL.revokeObjectURL(a.href)
   document.body.removeChild(a)
 }
+
+function parseFilenameFromContentDisposition(cd) {
+  if (!cd) return ''
+  const star = /filename\*\s*=\s*[^']*''([^;]+)/i.exec(cd)
+  if (star && star[1]) {
+    try { return decodeURIComponent(star[1].replace(/"/g, '').trim()) }
+    catch { return star[1].replace(/"/g, '').trim() }
+  }
+  const normal = /filename\s*=\s*("?)([^";]+)\1/i.exec(cd)
+  if (normal && normal[2]) return normal[2].trim()
+  return ''
+}
