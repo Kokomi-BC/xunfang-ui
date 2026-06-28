@@ -108,8 +108,8 @@
             <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
             <el-button link type="success" icon="Download" @click="openFlowDlg('checkin', row)">检入</el-button>
           </template>
-          <!-- 更新生命周期状态：始终可见 -->
-          <el-button link type="warning" icon="Edit" @click="openStatusDlg(row)">更新状态</el-button>
+          <!-- 更新生命周期状态：检出状态禁止 -->
+          <el-button link type="warning" icon="Edit" :disabled="wsCode(row)==='CHECKED_OUT'" @click="openStatusDlg(row)">更新状态</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -788,7 +788,7 @@ async function loadFlowTemplates(prefillId) {
   flowDlg.loading.templates = true
   try {
     const res = await listLifecycleTemplates({
-      "master.businessCode": "LCT00000009", latest: true, pageNum: 1, pageSize: 50
+      latest: true, pageNum: 1, pageSize: 50
     })
     flowDlg.tplOptions = res?.rows || res?.data || []
     if (prefillId && !flowDlg.tplOptions.some(t => t.id === prefillId)) {
@@ -855,7 +855,7 @@ async function confirmFlowDlg() {
 function loadLifecycleTemplates() {
   if (lifeTplLoading.value) return
   lifeTplLoading.value = true
-  listLifecycleTemplates({ "master.businessCode": "LCT00000009", latest: true, pageNum: 1, pageSize: 50 })
+  listLifecycleTemplates({ latest: true, pageNum: 1, pageSize: 50 })
     .then((res) => { lifecycleTemplateOptions.value = (res?.rows || res?.data || []) })
     .finally(() => (lifeTplLoading.value = false))
 }
@@ -888,7 +888,7 @@ function refreshStatesOnly() {
   const businessOperationId = chosen?.id
   if (!tplId || !businessOperationId) return
   lifeStateLoading.value = true
-  return getLifecycleStates({ templateId: tplId, businessOperationId })
+  return getLifecycleStates({ templateId: tplId, businessOperationId, operation: form.value.operation || 'create' })
     .then((res2) => {
       const arr = res2?.data || res2?.rows || []
       lifecycleStateOptions.value = Array.isArray(arr) ? arr : (arr ? [arr] : [])

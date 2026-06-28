@@ -43,7 +43,7 @@ export function updateProduct(data, file) {
  */
 export function delProduct(masterId) {
   return request({
-    url: '/manufacture/product/deleteXfProductByProductId/' + masterId,
+    url: '/manufacture/product/delete/' + masterId,
     method: 'delete'
   })
 }
@@ -54,7 +54,7 @@ export function delProduct(masterId) {
 export function delProductBatch(masterIds) {
   const ids = Array.isArray(masterIds) ? masterIds.join(',') : masterIds
   return request({
-    url: '/manufacture/product/' + ids,
+    url: '/manufacture/product/batch/' + ids,
     method: 'delete'
   })
 }
