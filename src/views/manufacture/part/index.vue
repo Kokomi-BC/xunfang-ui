@@ -44,13 +44,8 @@
     </el-row>
 
     <!-- 表格区 -->
-    <el-table v-loading="loading" :data="partList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="" width="40" align="center">
-        <template #default="scope">
-          <el-icon v-if="wsCode(scope.row) === 'CHECKED_OUT'" class="lock-red"><Lock /></el-icon>
-        </template>
-      </el-table-column>
+    <el-table v-loading="loading" :data="partList" v-column-resize :row-class-name="partRowClassName" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" :selectable="partRowSelectable" />
       <el-table-column label="Part编码" align="center" min-width="100">
         <template #default="scope">
           <el-tooltip placement="top" :disabled="!scope.row.id">
@@ -137,7 +132,7 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220" fixed="right">
         <template #default="scope">
           <el-button v-if="wsCode(scope.row) === 'CHECKED_IN'" link type="success" icon="Unlock" @click="confirmCheckout(scope.row)">检出</el-button>
           <el-button v-if="wsCode(scope.row) === 'CHECKED_OUT'" link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -449,6 +444,16 @@ const wsCode = (row) => {
   if (v === 'INWORK') return 'CHECKED_OUT'
   if (v === 'CHECKED_IN') return 'CHECKED_IN'
   return v
+}
+
+/** 复选框可选（已检出不可选） */
+function partRowSelectable(row) {
+  return wsCode(row) !== 'CHECKED_OUT'
+}
+
+/** 行样式（检出状态红色左边框） */
+function partRowClassName({ row }) {
+  return wsCode(row) === 'CHECKED_OUT' ? 'row-checked-out' : ''
 }
 
 /** 检出/检入（带 PN{id} 的二次确认） */

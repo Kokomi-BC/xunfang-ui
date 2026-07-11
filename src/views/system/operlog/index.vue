@@ -107,7 +107,7 @@
          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
 
-      <el-table ref="operlogRef" v-loading="loading" :data="operlogList" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
+      <el-table ref="operlogRef" v-loading="loading" :data="operlogList" v-column-resize @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
          <el-table-column type="selection" width="50" align="center" />
          <el-table-column label="日志编号" align="center" prop="operId" />
          <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" />
@@ -134,7 +134,7 @@
                <span>{{ scope.row.costTime }}毫秒</span>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
             <template #default="scope">
                <el-button link type="primary" icon="View" @click="handleView(scope.row, scope.index)" v-hasPermi="['system:operlog:query']">详细</el-button>
             </template>

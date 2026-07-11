@@ -8,11 +8,11 @@ $tiffany: #4AB7BD;
 $yellow: #FEC171;
 $panGreen: #30B08F;
 
-// 默认主题变量
+// 默认主题变量（中性暗灰替换深蓝）
 $menuText: #bfcbd9;
 $menuActiveText: #409eff;
-$menuBg: #304156;
-$menuHover: #263445;
+$menuBg: #2d2d2d;
+$menuHover: #1e1e1e;
 
 // 浅色主题theme-light
 $menuLightBg: #ffffff;
@@ -24,12 +24,12 @@ $menuLightActiveText: #409EFF;
 $base-sidebar-width: 200px;
 $sideBarWidth: 200px;
 
-// 菜单暗色变量
+// 菜单暗色变量（中性暗灰替换深蓝）
 $base-menu-color: #bfcbd9;
 $base-menu-color-active: #f4f4f5;
-$base-menu-background: #304156;
-$base-sub-menu-background: #1f2d3d;
-$base-sub-menu-hover: #001528;
+$base-menu-background: #2d2d2d;
+$base-sub-menu-background: #222222;
+$base-sub-menu-hover: #1a1a1a;
 
 // 组件变量
 $--color-primary: #409EFF;

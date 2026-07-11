@@ -40,6 +40,7 @@
       ref="familyTable"
       v-loading="loading"
       :data="familyList"
+      v-column-resize
       @selection-change="handleSelectionChange"
       row-key="id"
     >
@@ -51,7 +52,7 @@
       <el-table-column label="产品族中文名称" align="center" prop="productFamilyNameCn" />
       <el-table-column label="产品族英文名称" align="center" prop="productFamilyNameEn" />
       <el-table-column label="描述说明" align="center" prop="description" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(row)">修改</el-button>
           <el-button link type="danger" icon="Delete" @click="handleDelete(row)">删除</el-button>

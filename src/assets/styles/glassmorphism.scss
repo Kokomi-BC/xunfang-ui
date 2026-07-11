@@ -663,19 +663,335 @@ body {
 // 暗色模式适配
 // ──────────────────────────────────────
 html.dark {
-  --glass-bg: rgba(30, 30, 40, 0.72);
-  --glass-bg-strong: rgba(30, 30, 40, 0.88);
-  --glass-bg-card: rgba(30, 30, 40, 0.65);
+  --glass-bg: rgba(30, 30, 30, 0.72);
+  --glass-bg-strong: rgba(30, 30, 30, 0.88);
+  --glass-bg-card: rgba(30, 30, 30, 0.65);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
 
-html.dark body {
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(103, 194, 58, 0.03) 0%, transparent 50%),
-    linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+  // ══════════════════════════════════════
+  // 页面背景：中性暗色，替换深蓝色渐变
+  // ══════════════════════════════════════
+  body {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(103, 194, 58, 0.02) 0%, transparent 50%),
+      linear-gradient(135deg, #1a1a1a 0%, #1e1e1e 50%, #1a1a1a 100%);
+  }
+
+  // ══════════════════════════════════════
+  // Navbar 顶栏深色模式修复
+  // ══════════════════════════════════════
+  .navbar {
+    border-color: rgba(255, 255, 255, 0.06);
+
+    .right-menu-item {
+      color: #d0d0d0;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+      }
+    }
+
+    .avatar-wrapper .user-nickname {
+      color: #d0d0d0;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // TagsView 标签栏深色模式修复
+  // ══════════════════════════════════════
+  .tags-view-container {
+    background: rgba(20, 20, 20, 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.06) !important;
+
+    .tags-view-wrapper .tags-view-item {
+      background: rgba(30, 30, 30, 0.55) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      color: #a0a0a0;
+
+      &:hover {
+        background: rgba(40, 40, 40, 0.75) !important;
+        color: #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      &.active {
+        background: rgba(64, 158, 255, 0.15) !important;
+        border-color: rgba(64, 158, 255, 0.3) !important;
+        color: #409eff !important;
+        box-shadow: 0 2px 10px rgba(64, 158, 255, 0.2);
+      }
+
+      .el-icon-close {
+        color: #808080;
+
+        &:hover {
+          color: #c0c0c0;
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 按钮深色模式修复
+  // ══════════════════════════════════════
+  .el-button {
+    // Plain 按钮（工具栏中的"新增"、"删除"等）
+    &.is-plain:not(.el-button--small):not(.el-button--mini) {
+      background: rgba(30, 30, 30, 0.55) !important;
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #d0d0d0;
+
+      &:hover {
+        background: rgba(40, 40, 40, 0.7) !important;
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+    }
+
+    // 普通 default 按钮
+    &:not(.is-text):not(.is-link):not(.is-plain):not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger) {
+      background: rgba(30, 30, 30, 0.6);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #d0d0d0;
+
+      &:hover {
+        background: rgba(40, 40, 40, 0.75);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+      }
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 搜索表单 / 卡片 深色模式
+  // ══════════════════════════════════════
+  .app-main {
+    .search-form,
+    .el-form--inline {
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  .el-card,
+  .card-container,
+  .box-card {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+
+    .el-card__header {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      color: #e0e0e0;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 对话框深色模式
+  // ══════════════════════════════════════
+  .el-dialog {
+    .el-dialog__header {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+
+      .el-dialog__title {
+        color: #e0e0e0;
+      }
+    }
+
+    .el-dialog__body {
+      background: rgba(20, 20, 20, 0.5);
+    }
+
+    .el-dialog__footer {
+      border-top-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 输入框/选择器 深色模式边框
+  // ══════════════════════════════════════
+  .el-input__wrapper,
+  .el-textarea__inner {
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    background-color: rgba(30, 30, 30, 0.4);
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+  }
+
+  .el-input.is-focus .el-input__wrapper {
+    border-color: #409eff !important;
+  }
+
+  // ══════════════════════════════════════
+  // 下拉菜单深色模式
+  // ══════════════════════════════════════
+  .el-dropdown-menu,
+  .el-select-dropdown {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+
+    .el-dropdown-menu__item,
+    .el-select-dropdown__item {
+      color: #d0d0d0;
+
+      &:hover {
+        background: rgba(64, 158, 255, 0.12) !important;
+      }
+
+      &.is-selected,
+      &.selected {
+        background: rgba(64, 158, 255, 0.18) !important;
+        color: #409eff;
+      }
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 右键菜单深色模式
+  // ══════════════════════════════════════
+  .contextmenu {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+
+    li {
+      color: #d0d0d0;
+
+      &:hover {
+        background: rgba(64, 158, 255, 0.15);
+        color: #409eff;
+      }
+    }
+  }
+
+  // ══════════════════════════════════════
+  // Drawer 抽屉深色模式
+  // ══════════════════════════════════════
+  .el-drawer {
+    .el-drawer__header {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+      color: #e0e0e0;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // Tabs 选项卡深色模式
+  // ══════════════════════════════════════
+  .el-tabs__nav-wrap::after {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .el-tabs__item {
+    color: #a0a0a0;
+
+    &:hover {
+      color: #409eff;
+    }
+
+    &.is-active {
+      color: #409eff;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 面包屑深色模式
+  // ══════════════════════════════════════
+  .el-breadcrumb__item .el-breadcrumb__inner {
+    color: #a0a0a0;
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.1);
+      color: #e0e0e0;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 滚动条深色模式
+  // ══════════════════════════════════════
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 分页器深色模式
+  // ══════════════════════════════════════
+  .el-pagination {
+    .btn-prev,
+    .btn-next,
+    .el-pager li {
+      background-color: rgba(30, 30, 30, 0.5);
+      color: #d0d0d0;
+
+      &:hover {
+        color: #409eff;
+      }
+    }
+
+    .el-pager li.is-active {
+      color: #ffffff;
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 标签/Tag 深色模式 — 解决状态标签白色背景问题
+  // ══════════════════════════════════════
+  .el-tag {
+    // 覆盖 Element Plus 默认 light 效果的浅色背景
+    &.el-tag--default,
+    &.el-tag--info {
+      --el-tag-bg-color: rgba(144, 147, 153, 0.15);
+      --el-tag-border-color: rgba(144, 147, 153, 0.25);
+      --el-tag-text-color: #b0b3b8;
+      --el-tag-hover-color: rgba(144, 147, 153, 0.25);
+    }
+
+    &.el-tag--primary {
+      --el-tag-bg-color: rgba(64, 158, 255, 0.15);
+      --el-tag-border-color: rgba(64, 158, 255, 0.3);
+      --el-tag-text-color: #79bbff;
+      --el-tag-hover-color: rgba(64, 158, 255, 0.25);
+    }
+
+    &.el-tag--success {
+      --el-tag-bg-color: rgba(103, 194, 58, 0.15);
+      --el-tag-border-color: rgba(103, 194, 58, 0.3);
+      --el-tag-text-color: #95d475;
+      --el-tag-hover-color: rgba(103, 194, 58, 0.25);
+    }
+
+    &.el-tag--warning {
+      --el-tag-bg-color: rgba(230, 162, 60, 0.15);
+      --el-tag-border-color: rgba(230, 162, 60, 0.3);
+      --el-tag-text-color: #eebe77;
+      --el-tag-hover-color: rgba(230, 162, 60, 0.25);
+    }
+
+    &.el-tag--danger {
+      --el-tag-bg-color: rgba(245, 108, 108, 0.15);
+      --el-tag-border-color: rgba(245, 108, 108, 0.3);
+      --el-tag-text-color: #f89898;
+      --el-tag-hover-color: rgba(245, 108, 108, 0.25);
+    }
+  }
+
+  // ══════════════════════════════════════
+  // 登录/注册页背景（中性暗灰）
+  // ══════════════════════════════════════
+  .login-page,
+  .register-page {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(103, 194, 58, 0.04) 0%, transparent 50%),
+      linear-gradient(135deg, #1a1a1a 0%, #1e1e1e 100%);
+  }
 }
 
 .el-card,

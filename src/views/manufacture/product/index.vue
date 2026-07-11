@@ -54,14 +54,9 @@
     </el-row>
 
     <!-- 表格 -->
-    <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="productList" v-column-resize :row-class-name="productRowClassName" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" :selectable="productRowSelectable" />
       <el-table-column v-if="false" label="id" align="center" prop="id" />
-      <el-table-column width="28" align="center">
-        <template #default="{ row }">
-          <el-icon v-if="wsCode(row)==='CHECKED_OUT'" class="lock-red"><Lock /></el-icon>
-        </template>
-      </el-table-column>
 
       <el-table-column label="产品编码" width="160" align="center">
         <template #default="{ row }"><div class="wrap-scroll">PO{{ row.id }}</div></template>
@@ -98,7 +93,7 @@
       </el-table-column>
 
       <!-- 操作 -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="360">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="360" fixed="right">
         <template #default="{ row }">
           <template v-if="wsCode(row)==='CHECKED_IN'">
             <el-button link type="primary" icon="Upload" @click="openFlowDlg('checkout', row)">检出</el-button>
@@ -515,6 +510,16 @@ const wsCode = (row) => {
   if (row?.workingStateAlias) return norm(row.workingStateAlias)
   if (row?.workingStateCode)  return norm(row.workingStateCode)
   return ''
+}
+
+/** 复选框可选（已检出不可选） */
+function productRowSelectable(row) {
+  return wsCode(row) !== 'CHECKED_OUT'
+}
+
+/** 行样式（检出状态红色左边框） */
+function productRowClassName({ row }) {
+  return wsCode(row) === 'CHECKED_OUT' ? 'row-checked-out' : ''
 }
 
 /** ★ 原始工作状态（用于提交到后端） */

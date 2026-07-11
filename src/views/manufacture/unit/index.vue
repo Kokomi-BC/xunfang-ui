@@ -20,7 +20,7 @@
     </el-row>
 
     <!-- 表格区 -->
-    <el-table v-loading="loading" :data="unitList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="unitList" v-column-resize @selection-change="handleSelectionChange">
       <el-table-column v-if="false" label="id" align="center" prop="id" />
       <el-table-column label="单位编码" align="center">
         <template #default="scope">
@@ -28,7 +28,7 @@
         </template>
       </el-table-column>
       <el-table-column label="单位名称" align="center" prop="unitName" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>

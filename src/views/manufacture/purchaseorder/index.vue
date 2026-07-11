@@ -83,7 +83,7 @@
     </el-row>
 
     <!-- 表格区 -->
-    <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="orderList" v-column-resize @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" :selectable="isSelectable" />
       <el-table-column label="序号" type="index" width="60" align="center" :index="indexMethod" />
       <el-table-column v-if="false" label="采购订单id" align="center" prop="id" />
@@ -108,7 +108,7 @@
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="260">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="260" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>

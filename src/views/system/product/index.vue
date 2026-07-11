@@ -137,7 +137,7 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="productList" v-column-resize @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column v-if="false" label="产品id" align="center" prop="id" />
       <el-table-column v-if="false" label="用户id" align="center" prop="userId" />
@@ -151,7 +151,7 @@
       <el-table-column label="成本信息" align="center" prop="costInformation" />
       <el-table-column label="销售价格" align="center" prop="sellingPrice" />
       <el-table-column label="客户反馈" align="center" prop="customerFeedback" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:product:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:product:remove']">删除</el-button>

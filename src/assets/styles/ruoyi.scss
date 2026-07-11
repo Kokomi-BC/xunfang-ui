@@ -91,6 +91,57 @@
   }
 }
 
+/* ══════════════════════════════════════
+   Excel 风格表格网格线
+   ══════════════════════════════════════ */
+.el-table {
+  /* 表头单元格分隔线 */
+  .el-table__header-wrapper th {
+    border-right: 1px solid var(--el-table-border-color, #ebeef5) !important;
+  }
+  .el-table__header-wrapper th:last-child {
+    border-right: none !important;
+  }
+
+  /* 表体单元格分隔线 */
+  .el-table__body-wrapper td {
+    border-right: 1px solid var(--el-table-border-color, #ebeef5) !important;
+  }
+  .el-table__body-wrapper td:last-child {
+    border-right: none !important;
+  }
+
+  /* 斑马纹行也保持分隔线 */
+  &.el-table--striped .el-table__body-wrapper tr.el-table__row--striped td {
+    border-right: 1px solid var(--el-table-border-color, #ebeef5) !important;
+  }
+  &.el-table--striped .el-table__body-wrapper tr.el-table__row--striped td:last-child {
+    border-right: none !important;
+  }
+
+  /* hover 行也保持分隔线 */
+  .el-table__body-wrapper tr:hover > td {
+    border-right-color: var(--el-table-border-color, #ebeef5) !important;
+  }
+
+  /* 移除最后一行底部横线 */
+  .el-table__body-wrapper tr:last-child td {
+    border-bottom: none !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   拖拽列宽时禁止换行（防止改变行高）
+   ══════════════════════════════════════ */
+.el-table--resizing {
+  .el-table__body-wrapper td .cell {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: normal !important;
+  }
+}
+
 /** 表单布局 **/
 .form-header {
   font-size:15px;
@@ -287,4 +338,51 @@
 /* 分割面板样式 */
 .splitpanes.default-theme .splitpanes__pane {
   background-color: var(--splitpanes-default-bg) !important;
+}
+
+/* ══════════════════════════════════════
+   深色模式覆盖
+   ══════════════════════════════════════ */
+html.dark {
+  /* 表格表头深色背景（覆盖硬编码的 #f8f8f9） */
+  .el-table {
+    .el-table__header-wrapper,
+    .el-table__fixed-header-wrapper {
+      th {
+        background-color: var(--el-bg-color-overlay, #1d1e1f) !important;
+        color: var(--el-text-color-regular, #d0d0d0);
+      }
+    }
+  }
+
+  /* 表单分割线 */
+  .form-header {
+    color: #a0b0d0;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* 列表组边框 */
+  .list-group-item {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+
+  /* 头像上传预览阴影 */
+  .avatar-upload-preview {
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+
+  /* aside 提示块 */
+  aside {
+    background: rgba(30, 30, 30, 0.5);
+    color: #d0d0d0;
+
+    a {
+      color: #66b1ff;
+
+      &:hover {
+        color: #409eff;
+      }
+    }
+  }
 }

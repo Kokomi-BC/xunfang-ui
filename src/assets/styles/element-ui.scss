@@ -94,3 +94,90 @@
 .el-dropdown .el-dropdown-link{
   color: var(--el-color-primary) !important;
 }
+
+/* ══════════════════════════════════════
+   检出锁定行标记（红色左边框替换锁图标列）
+   ══════════════════════════════════════ */
+.el-table .row-checked-out {
+  box-shadow: inset 3px 0 0 0 #F56C6C;
+
+  // 复选框禁用态
+  .el-checkbox__inner {
+    border-color: #dcdfe6 !important;
+    background-color: #f5f7fa !important;
+    cursor: not-allowed;
+  }
+}
+
+html.dark .el-table .row-checked-out {
+  box-shadow: inset 3px 0 0 0 #f89898;
+
+  .el-checkbox__inner {
+    border-color: rgba(255,255,255,0.12) !important;
+    background-color: rgba(30,30,30,0.4) !important;
+  }
+}
+
+/* ══════════════════════════════════════
+   表格列宽拖拽调整手柄
+   ══════════════════════════════════════ */
+.col-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 10;
+  transition: background-color 0.15s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    right: 2px;
+    bottom: 25%;
+    width: 2px;
+    border-radius: 1px;
+    background-color: transparent;
+    transition: background-color 0.15s;
+  }
+
+  &:hover::after,
+  &:active::after {
+    background-color: #409eff;
+  }
+
+  &:hover {
+    background-color: rgba(64, 158, 255, 0.06);
+  }
+}
+
+/* 拖拽中状态 */
+.col-resizing {
+  .cell {
+    user-select: none;
+  }
+}
+
+.el-table--resizing {
+  user-select: none;
+
+  .el-table__body-wrapper {
+    pointer-events: none;
+  }
+}
+
+/* 深色模式手柄 */
+html.dark {
+  .col-resize-handle {
+    &:hover::after,
+    &:active::after {
+      background-color: #79bbff;
+    }
+
+    &:hover {
+      background-color: rgba(64, 158, 255, 0.12);
+    }
+  }
+}
