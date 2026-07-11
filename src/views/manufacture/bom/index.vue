@@ -154,7 +154,7 @@
 
     <!-- ==================== BOM 新增/修改弹窗 ==================== -->
     <el-dialog :title="bomTitle" v-model="bomOpen" width="750px" destroy-on-close append-to-body>
-      <el-form ref="bomRef" :model="bomForm" :rules="bomRules" label-width="100px" size="small">
+      <el-form ref="bomRef" :model="bomForm" :rules="bomRules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="BOM编码" prop="bomCode">
@@ -277,7 +277,7 @@
 
     <!-- ==================== BOM 明细单条修改弹窗 ==================== -->
     <el-dialog title="修改明细" v-model="itemEditOpen" width="750px" destroy-on-close append-to-body>
-      <el-form ref="itemEditRef" :model="itemEditForm" :rules="itemEditRules" label-width="100px" size="small">
+      <el-form ref="itemEditRef" :model="itemEditForm" :rules="itemEditRules" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="行号" prop="lineNo">
