@@ -1,0 +1,684 @@
+/**
+ * 玻璃态 + 圆角 美化样式
+ * 为讯方管理系统增添现代毛玻璃与柔和圆角效果
+ */
+
+// ──────────────────────────────────────
+// 全局 CSS 变量（可被子组件继承）
+// ──────────────────────────────────────
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-strong: rgba(255, 255, 255, 0.88);
+  --glass-bg-dark: rgba(48, 65, 86, 0.85);
+  --glass-bg-card: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.10);
+  --glass-blur: blur(12px) saturate(180%);
+  --glass-blur-light: blur(8px) saturate(160%);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ──────────────────────────────────────
+// 全局背景（微渐变 + 模糊底层）
+// ──────────────────────────────────────
+body {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(103, 194, 58, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(230, 162, 60, 0.04) 0%, transparent 50%),
+    linear-gradient(135deg, #f0f2f5 0%, #e8eaef 50%, #f5f6f8 100%);
+  background-attachment: fixed;
+}
+
+// ──────────────────────────────────────
+// Sidebar 侧边栏 — 背景由组件 v-bind 动态控制，仅增强圆角
+// ──────────────────────────────────────
+#app .sidebar-container {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+// 菜单项微调（不干预布局）
+#app .sidebar-container .el-menu {
+  .el-menu-item,
+  .el-sub-menu__title {
+    border-radius: var(--radius-sm);
+    transition: var(--transition-smooth);
+  }
+}
+
+// Logo 区域可点击切换侧边栏
+#app .sidebar-logo-container {
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+// ──────────────────────────────────────
+// Navbar 顶部导航 — 玻璃态（四角圆角，配合居中布局）
+// ──────────────────────────────────────
+.navbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  box-shadow: var(--glass-shadow);
+
+  .right-menu-item {
+    border-radius: var(--radius-sm);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5) !important;
+      backdrop-filter: blur(4px);
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// TagsView 标签页 — 玻璃态圆角标签 + 容器圆角
+// ──────────────────────────────────────
+.tags-view-container {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(6px) saturate(150%);
+  -webkit-backdrop-filter: blur(6px) saturate(150%);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+
+  .tags-view-wrapper {
+    .tags-view-item {
+      background: rgba(255, 255, 255, 0.55) !important;
+      border: 1px solid rgba(0, 0, 0, 0.06) !important;
+      border-radius: var(--radius-sm) !important;
+      margin: 4px 2px;
+      padding: 0 12px !important;
+      transition: var(--transition-smooth);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.85) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transform: translateY(-1px);
+      }
+
+      &.active {
+        background: rgba(64, 158, 255, 0.12) !important;
+        border-color: rgba(64, 158, 255, 0.3) !important;
+        color: #409eff !important;
+        box-shadow: 0 2px 10px rgba(64, 158, 255, 0.15);
+      }
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// AppMain 内容区
+// ──────────────────────────────────────
+.app-main {
+  padding: 16px;
+
+  // 搜索/筛选卡片区域
+  .search-form,
+  .el-form--inline {
+    background: var(--glass-bg-card);
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 20px 20px 4px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--glass-shadow);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      box-shadow: var(--glass-shadow-hover);
+    }
+  }
+
+  // 表格容器
+  .el-table,
+  .table-container {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--glass-shadow);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      box-shadow: var(--glass-shadow-hover);
+    }
+  }
+
+  // 表格表头圆角
+  .el-table {
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+
+    .el-table__header-wrapper {
+      th:first-child {
+        border-top-left-radius: var(--radius-md);
+      }
+      th:last-child {
+        border-top-right-radius: var(--radius-md);
+      }
+    }
+  }
+
+  // 分页区域
+  .pagination-container {
+    background: var(--glass-bg-card) !important;
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px 16px !important;
+    margin-top: 16px;
+    box-shadow: var(--glass-shadow);
+  }
+}
+
+// ──────────────────────────────────────
+// 卡片容器
+// ──────────────────────────────────────
+.el-card,
+.card-container,
+.box-card {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-bg-card) !important;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition-smooth);
+
+  &:hover {
+    box-shadow: var(--glass-shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .el-card__header {
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    font-weight: 600;
+    color: #303133;
+  }
+}
+
+// ──────────────────────────────────────
+// 对话框 Dialog — 玻璃态
+// ──────────────────────────────────────
+.el-dialog {
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12) !important;
+
+  .el-dialog__header {
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 18px 24px;
+    margin-right: 0;
+
+    .el-dialog__title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #303133;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .el-dialog__footer {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border-top: 1px solid var(--glass-border);
+    padding: 14px 24px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+}
+
+// ──────────────────────────────────────
+// 按钮美化
+// ──────────────────────────────────────
+.el-button {
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  letter-spacing: 0.3px;
+
+  // 普通尺寸按钮保持圆角（排除 link/text 按钮）
+  &:not(.el-button--small):not(.el-button--mini):not(.is-link):not(.is-text) {
+    border-radius: var(--radius-sm) !important;
+  }
+
+  // 表格内操作按钮（small/mini）—— 纯文字无背景无边框
+  &.el-button--small,
+  &.el-button--mini {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    padding: 2px 6px !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    min-height: auto;
+
+    // 覆盖所有状态
+    &:hover,
+    &:focus,
+    &:active {
+      background: transparent !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+    }
+
+    &.el-button--primary {
+      color: #409eff !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+
+      &:hover {
+        color: #66b1ff !important;
+        background: transparent !important;
+        background-color: rgba(64, 158, 255, 0.06) !important;
+      }
+    }
+
+    &.el-button--success {
+      color: #67c23a !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+
+      &:hover {
+        color: #85ce61 !important;
+        background: transparent !important;
+        background-color: rgba(103, 194, 58, 0.06) !important;
+      }
+    }
+
+    &.el-button--warning {
+      color: #e6a23c !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+
+      &:hover {
+        color: #ebb563 !important;
+        background: transparent !important;
+        background-color: rgba(230, 162, 60, 0.06) !important;
+      }
+    }
+
+    &.el-button--danger {
+      color: #f56c6c !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      border-color: transparent !important;
+
+      &:hover {
+        color: #f89898 !important;
+        background: transparent !important;
+        background-color: rgba(245, 108, 108, 0.06) !important;
+      }
+    }
+  }
+
+  &:not(.is-text):not(.is-link) {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // 普通尺寸主要按钮渐变（排除 link/text/small/mini）
+  &:not(.el-button--small):not(.el-button--mini):not(.is-link):not(.is-text) {
+    &.el-button--primary {
+      background: linear-gradient(135deg, #409eff 0%, #337ecc 100%);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #66b1ff 0%, #409eff 100%);
+      }
+    }
+
+    &.el-button--success {
+      background: linear-gradient(135deg, #67c23a 0%, #529b2e 100%);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #85ce61 0%, #67c23a 100%);
+      }
+    }
+
+    &.el-button--warning {
+      background: linear-gradient(135deg, #e6a23c 0%, #cf9236 100%);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #ebb563 0%, #e6a23c 100%);
+      }
+    }
+
+    &.el-button--danger {
+      background: linear-gradient(135deg, #f56c6c 0%, #da5757 100%);
+      border: none;
+
+      &:hover {
+        background: linear-gradient(135deg, #f89898 0%, #f56c6c 100%);
+      }
+    }
+  }
+
+  // Plain 按钮玻璃态（仅普通尺寸）
+  &.is-plain:not(.el-button--small):not(.el-button--mini) {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+// ──────────────────────────────────────
+// 输入框/选择器 — 加粗边框，更清晰
+// ──────────────────────────────────────
+.el-input__wrapper,
+.el-textarea__inner {
+  border-radius: var(--radius-sm) !important;
+  transition: var(--transition-smooth);
+  border: 1px solid #c0c4cc !important;
+  box-shadow: none !important;
+
+  &:hover {
+    border-color: #909399 !important;
+    box-shadow: none !important;
+  }
+}
+
+.el-input.is-focus .el-input__wrapper {
+  border-color: #409eff !important;
+  box-shadow: 0 0 0 1px #409eff !important;
+}
+
+.el-select .el-input__wrapper {
+  border-radius: var(--radius-sm) !important;
+}
+
+// ──────────────────────────────────────
+// 下拉菜单玻璃态（仅 dropdown/select，不含 tooltip 等通用 popper）
+// ──────────────────────────────────────
+.el-dropdown-menu,
+.el-select-dropdown {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--glass-border) !important;
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden;
+
+  .el-dropdown-menu__item,
+  .el-select-dropdown__item {
+    border-radius: 6px;
+    margin: 2px 6px;
+    transition: var(--transition-smooth);
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.08) !important;
+    }
+
+    &.is-selected,
+    &.selected {
+      background: rgba(64, 158, 255, 0.12) !important;
+      color: #409eff;
+      font-weight: 600;
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// 标签/Tag 圆角
+// ──────────────────────────────────────
+.el-tag {
+  border-radius: var(--radius-sm) !important;
+  font-weight: 500;
+  padding: 0 10px;
+}
+
+// ──────────────────────────────────────
+// 分页器美化
+// ──────────────────────────────────────
+.el-pagination {
+  .el-pager li,
+  .btn-prev,
+  .btn-next {
+    border-radius: var(--radius-sm) !important;
+    transition: var(--transition-smooth);
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .el-pager li.is-active {
+    background: linear-gradient(135deg, #409eff, #337ecc) !important;
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
+  }
+}
+
+// ──────────────────────────────────────
+// Tabs 选项卡
+// ──────────────────────────────────────
+.el-tabs__nav-wrap {
+  &::after {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.el-tabs__item {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: var(--transition-smooth);
+
+  &:hover {
+    color: #409eff;
+  }
+}
+
+// ──────────────────────────────────────
+// 消息提示/Popover 玻璃态
+// ──────────────────────────────────────
+.el-message,
+.el-notification {
+  border-radius: var(--radius-md) !important;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+
+.el-message-box {
+  border-radius: var(--radius-lg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14) !important;
+  border: 1px solid var(--glass-border) !important;
+  overflow: hidden;
+}
+
+// ──────────────────────────────────────
+// Tree 树形控件
+// ──────────────────────────────────────
+.tree-border {
+  border-radius: var(--radius-md) !important;
+  background: var(--glass-bg-card) !important;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border) !important;
+}
+
+.el-tree {
+  background: transparent !important;
+
+  .el-tree-node__content {
+    border-radius: var(--radius-sm);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.06) !important;
+    }
+  }
+
+  .el-tree-node.is-current > .el-tree-node__content {
+    background: rgba(64, 158, 255, 0.1) !important;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+}
+
+// ──────────────────────────────────────
+// 面包屑
+// ──────────────────────────────────────
+.el-breadcrumb__item {
+  .el-breadcrumb__inner {
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-smooth);
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.06);
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// 滚动条美化
+// ──────────────────────────────────────
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+  transition: background 0.3s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.22);
+  }
+}
+
+// ──────────────────────────────────────
+// 登录页背景增强（不影响现有登录页结构）
+// ──────────────────────────────────────
+.login-page,
+.register-page {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(103, 194, 58, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 10%, rgba(230, 162, 60, 0.05) 0%, transparent 50%),
+    linear-gradient(135deg, #f0f2f5 0%, #dde2e8 100%);
+}
+
+// ──────────────────────────────────────
+// 动画 keyframes
+// ──────────────────────────────────────
+@keyframes glass-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ──────────────────────────────────────
+// 右键菜单 ContextMenu 玻璃态
+// ──────────────────────────────────────
+.contextmenu {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+  padding: 4px 0 !important;
+  overflow: hidden;
+
+  li {
+    margin: 2px 6px;
+    border-radius: 6px;
+    padding: 8px 14px;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.08);
+      color: #409eff;
+    }
+  }
+}
+
+// ──────────────────────────────────────
+// Drawer 抽屉
+// ──────────────────────────────────────
+.el-drawer {
+  background: var(--glass-bg-strong) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+
+  .el-drawer__header {
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 0;
+  }
+}
+
+// ──────────────────────────────────────
+// 暗色模式适配
+// ──────────────────────────────────────
+html.dark {
+  --glass-bg: rgba(30, 30, 40, 0.72);
+  --glass-bg-strong: rgba(30, 30, 40, 0.88);
+  --glass-bg-card: rgba(30, 30, 40, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+html.dark body {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(64, 158, 255, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(103, 194, 58, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+}
+
+.el-card,
+.search-form {
+  animation: glass-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

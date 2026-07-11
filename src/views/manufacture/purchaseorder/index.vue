@@ -100,27 +100,21 @@
       <el-table-column label="规格型号" align="center" prop="specificationsModels" :show-overflow-tooltip="true" />
       <el-table-column label="采购数量" align="center" prop="purchaseQuantity" />
       <el-table-column label="单位" align="center" prop="unit" />
-      <el-table-column label="单价（元）" align="center" prop="unitPrice" />
-      <el-table-column label="总价格（元）" align="center" prop="totalPrice" />
+      <el-table-column label="单价（元）" align="center" prop="unitPrice" :formatter="formatPrice" />
+      <el-table-column label="总价格（元）" align="center" prop="totalPrice" :formatter="formatPrice" />
       <el-table-column label="订单状态" align="center" prop="status">
         <template #default="scope">
           <span>{{ formatStatus(scope.row.status) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="220">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="260">
         <template #default="scope">
-          <template v-if="scope.row.status == 1">
-            <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-            <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
-            <el-button link type="success" @click="() => changeOrderStatus(scope.row, '2')">确认</el-button>
-          </template>
-          <template v-else-if="scope.row.status == 2">
-            <el-button link type="warning" @click="() => changeOrderStatus(scope.row, '3')">已发货</el-button>
-          </template>
-          <template v-else-if="scope.row.status == 3">
-            <el-button link type="success" @click="() => changeOrderStatus(scope.row, '4')">已完成</el-button>
-          </template>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.status == '1'" link type="success" @click="() => changeOrderStatus(scope.row, '2')">确认</el-button>
+          <el-button v-if="scope.row.status == '2'" link type="warning" @click="() => changeOrderStatus(scope.row, '3')">已发货</el-button>
+          <el-button v-if="scope.row.status == '3'" link type="success" @click="() => changeOrderStatus(scope.row, '4')">已完成</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -171,7 +165,7 @@
           <el-input v-model="form.unit" placeholder="请输入单位" />
         </el-form-item>
         <el-form-item label="单价" prop="unitPrice">
-          <el-input v-model.number="form.unitPrice" placeholder="请输入单价" @input="calcTotalPrice">
+          <el-input v-model.number="form.unitPrice" placeholder="请输入单价" @input="calcTotalPrice" @blur="roundUnitPrice">
             <template #append>元</template>
           </el-input>
         </el-form-item>
@@ -181,7 +175,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="订单状态" prop="status">
-          <el-select v-model="form.status" disabled>
+          <el-select v-model="form.status">
             <el-option label="待确认" value="1" />
             <el-option label="已确认" value="2" />
             <el-option label="已发货" value="3" />
@@ -367,6 +361,9 @@ function handleUpdate(row) {
   const _id = row.id || ids.value
   getPurchaseOrder(_id).then(response => {
     form.value = response.data
+    // 价格保留两位小数
+    if (form.value.unitPrice != null) form.value.unitPrice = Number(form.value.unitPrice).toFixed(2)
+    if (form.value.totalPrice != null) form.value.totalPrice = Number(form.value.totalPrice).toFixed(2)
     open.value = true
     title.value = "修改采购订单"
   })
@@ -413,10 +410,24 @@ function calcTotalPrice() {
   form.value.totalPrice = (quantity * price).toFixed(2)
 }
 
+/** 单价失焦时强制保留两位小数 */
+function roundUnitPrice() {
+  if (form.value.unitPrice !== null && form.value.unitPrice !== undefined && form.value.unitPrice !== '') {
+    form.value.unitPrice = Number(form.value.unitPrice).toFixed(2)
+    calcTotalPrice()
+  }
+}
+
 /** 订单状态格式化 */
 function formatStatus(status) {
   const map = { '1': '待确认', '2': '已确认', '3': '已发货', '4': '已完成' }
   return map[status] || '-'
+}
+
+/** 价格保留两位小数 */
+function formatPrice(row, column, cellValue) {
+  if (cellValue === null || cellValue === undefined || cellValue === '') return '-'
+  return Number(cellValue).toFixed(2)
 }
 
 /** 订单状态流转 */
@@ -425,6 +436,8 @@ function changeOrderStatus(row, newStatus) {
   updatePurchaseOrder(updated).then(() => {
     proxy.$modal.msgSuccess("订单状态已更新为：" + formatStatus(newStatus))
     getList()
+  }).catch(() => {
+    proxy.$modal.msgError("状态更新失败")
   })
 }
 

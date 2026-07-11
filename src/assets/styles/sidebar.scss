@@ -5,7 +5,7 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: vars.$base-sidebar-width;
+    margin-left: 210px;
     position: relative;
   }
 
@@ -15,15 +15,19 @@
 
   .sidebar-container {
     transition: width 0.28s;
-    width: vars.$base-sidebar-width !important;
-    height: 100%;
+    width: fit-content !important;
+    min-width: 210px;
+    max-width: 300px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
     position: fixed;
     font-size: 0px;
-    top: 0;
-    bottom: 0;
+    top: 50%;
     left: 0;
+    transform: translateY(-50%);
     z-index: 1001;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     -webkit-box-shadow: 2px 0 6px rgba(0,21,41,.35);
     box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
 
@@ -94,7 +98,7 @@
 
     & .nest-menu .el-sub-menu>.el-sub-menu__title,
     & .el-sub-menu .el-menu-item {
-      min-width: vars.$base-sidebar-width !important;
+      min-width: 210px !important;
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.06) !important;
@@ -114,6 +118,7 @@
   .hideSidebar {
     .sidebar-container {
       width: 54px !important;
+      min-width: 54px !important;
     }
 
     .main-container {
@@ -169,9 +174,27 @@
   }
 
   .el-menu--collapse .el-menu .el-sub-menu {
-    min-width: vars.$base-sidebar-width !important;
+    min-width: 210px !important;
   }
+}
 
+// ══════════════════════════════════════
+// 收起后悬浮子菜单弹窗 — 圆角
+// 注意：弹窗被 teleport 到 body，必须在 #app 外层
+// ══════════════════════════════════════
+.el-menu--popup-container {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+
+  .el-popper__arrow { display: none !important; }
+  .el-menu { border-radius: 0 !important; box-shadow: none !important; }
+  .el-menu-item { border-radius: 0 !important; }
+  .el-sub-menu__title { border-radius: 0 !important; }
+}
+
+#app {
   // mobile responsive
   .mobile {
     .main-container {
@@ -180,14 +203,14 @@
 
     .sidebar-container {
       transition: transform .28s;
-      width: vars.$base-sidebar-width !important;
+      width: 210px !important;
     }
 
     &.hideSidebar {
       .sidebar-container {
         pointer-events: none;
         transition-duration: 0.3s;
-        transform: translate3d(-(vars.$base-sidebar-width), 0, 0);
+        transform: translate3d(-210px, -50%, 0);
       }
     }
   }
@@ -201,6 +224,13 @@
   }
 }
 
+@keyframes dynamicIsland {
+  0%   { opacity: 0; max-height: 0; clip-path: inset(0 0 100% 0); }
+  60%  { opacity: 1; max-height: 600px; clip-path: inset(0 0 0 0); }
+  80%  { max-height: 450px; }
+  100% { opacity: 1; max-height: 800px; clip-path: inset(0 0 0 0); }
+}
+
 // when menu collapsed
 .el-menu--vertical {
   &>.el-menu {
@@ -212,7 +242,6 @@
   .nest-menu .el-sub-menu>.el-sub-menu__title,
   .el-menu-item {
     &:hover {
-      // you can use $sub-menuHover
       background-color: rgba(0, 0, 0, 0.06) !important;
     }
   }

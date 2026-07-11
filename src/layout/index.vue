@@ -91,22 +91,26 @@ function setLayout() {
 
 .fixed-header {
   position: fixed;
-  top: 0;
-  right: 0;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9;
-  width: calc(100% - #{vars.$base-sidebar-width});
-  transition: width 0.28s;
+  width: auto;
+  min-width: 500px;
+  max-width: calc(100% - 240px);
+  transition: all 0.28s;
 }
 
 .hideSidebar .fixed-header {
-  width: calc(100% - 54px);
+  max-width: calc(100% - 80px);
 }
 
 .sidebarHide .fixed-header {
-  width: 100%;
+  max-width: calc(100% - 40px);
 }
 
 .mobile .fixed-header {
-  width: 100%;
+  max-width: calc(100% - 20px);
+  top: 10px;
 }
 </style>

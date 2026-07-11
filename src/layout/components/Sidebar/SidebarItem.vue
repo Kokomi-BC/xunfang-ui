@@ -49,6 +49,40 @@ const props = defineProps({
 })
 
 const onlyOneChild = ref({})
+const subMenu = ref(null)
+const hoverTimer = ref(null)
+
+// 悬浮 2s 后自动展开，el-menu unique-opened 自动手风琴
+function onHover() {
+  clearTimeout(hoverTimer.value)
+  hoverTimer.value = setTimeout(() => {
+    subMenu.value?.open()
+  }, 2000)
+}
+
+function onLeave() {
+  clearTimeout(hoverTimer.value)
+  hoverTimer.value = null
+  subMenu.value?.close()
+}
+
+// 手动在 el-sub-menu 根元素上绑定 hover 事件
+onMounted(() => {
+  const el = subMenu.value?.$el
+  if (el) {
+    el.addEventListener('mouseenter', onHover)
+    el.addEventListener('mouseleave', onLeave)
+  }
+})
+
+onBeforeUnmount(() => {
+  const el = subMenu.value?.$el
+  if (el) {
+    el.removeEventListener('mouseenter', onHover)
+    el.removeEventListener('mouseleave', onLeave)
+  }
+  clearTimeout(hoverTimer.value)
+})
 
 function hasOneShowingChild(children = [], parent) {
   if (!children) {
