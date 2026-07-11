@@ -46,25 +46,37 @@ function ensureGlobalEvents() {
       })
     }
 
-    // 计算当前列的可用增长量（受后续列可缩减量限制）
-    let maxGrow = 0
+    // 计算可用伸缩量
+    let maxGrow = 0, maxShrink = startWidth - MIN_W
     for (let i = cellIndex + 1; i < totalCols; i++) {
       maxGrow += Math.max(0, allStartWidths[i] - MIN_W)
     }
-    const actualDiff = diff > 0 ? Math.min(diff, maxGrow) : Math.max(diff, MIN_W - startWidth)
+
+    // actualDiff: 当前列实际宽度变化量（正=变宽, 负=变窄）
+    const actualDiff = diff > 0
+      ? Math.min(diff, maxGrow)                         // 右拖：不能超过后续列可缩总量
+      : Math.max(diff, -maxShrink)                      // 左拖：不能低于最小宽度
 
     // 当前列
-    const curW = Math.max(MIN_W, startWidth + actualDiff)
+    const curW = startWidth + actualDiff
     setCol(cellIndex, curW)
 
-    // 级联缩减后续列，避免任何一列低于 MIN_W
-    let remaining = actualDiff
-    for (let i = cellIndex + 1; i < totalCols && remaining > 0; i++) {
-      const available = Math.max(0, allStartWidths[i] - MIN_W)
-      const take = Math.min(remaining, available)
-      if (take > 0) {
-        setCol(i, allStartWidths[i] - take)
-        remaining -= take
+    if (actualDiff > 0) {
+      // 右拖 → 从后续列"借用"宽度
+      let remaining = actualDiff
+      for (let i = cellIndex + 1; i < totalCols && remaining > 0; i++) {
+        const available = Math.max(0, allStartWidths[i] - MIN_W)
+        const take = Math.min(remaining, available)
+        if (take > 0) {
+          setCol(i, allStartWidths[i] - take)
+          remaining -= take
+        }
+      }
+    } else if (actualDiff < 0) {
+      // 左拖 → 把释放的宽度给下一列
+      const ni = cellIndex + 1
+      if (allThs[ni]) {
+        setCol(ni, allStartWidths[ni] - actualDiff)     // -actualDiff 为正
       }
     }
   }

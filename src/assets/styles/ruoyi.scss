@@ -74,6 +74,17 @@
   padding: 10px 20px 0;
 }
 
+/* 弹窗底部按钮统一样式 */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.dialog-footer .el-button {
+  min-width: 80px;
+}
+
 .el-table {
   .el-table__header-wrapper, .el-table__fixed-header-wrapper {
     th {

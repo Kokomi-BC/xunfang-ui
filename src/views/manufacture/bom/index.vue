@@ -5,7 +5,7 @@
       <!-- ==================== Tab 1: BOM 主表管理 ==================== -->
       <el-tab-pane label="BOM 主表管理" name="bom">
         <!-- 搜索区域 -->
-        <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="80px" size="small">
+        <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="80px">
           <el-form-item label="BOM编码" prop="bomCode">
             <el-input v-model="queryParams.bomCode" placeholder="请输入BOM编码" clearable @keyup.enter="handleQuery" />
           </el-form-item>
@@ -26,18 +26,18 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="Search" size="small" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" size="small" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
 
         <!-- 工具栏 -->
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" size="small" @click="handleAdd">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" size="small" :disabled="multiple || hasCheckedOutSelected" @click="handleBatchDelete">删除</el-button>
+            <el-button type="danger" plain icon="Delete" :disabled="multiple || hasCheckedOutSelected" @click="handleBatchDelete">删除</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" />
         </el-row>
@@ -100,7 +100,7 @@
         </template>
 
         <!-- 明细搜索 -->
-        <el-form :model="itemQueryParams" ref="itemQueryRef" :inline="true" label-width="80px" size="small">
+        <el-form :model="itemQueryParams" ref="itemQueryRef" :inline="true" label-width="80px">
           <el-form-item label="Part编码" prop="partCode">
             <el-input v-model="itemQueryParams.partCode" placeholder="请输入Part编码" clearable @keyup.enter="getItemList" />
           </el-form-item>
@@ -108,18 +108,18 @@
             <el-input v-model="itemQueryParams.partName" placeholder="请输入Part名称" clearable @keyup.enter="getItemList" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="Search" size="small" @click="getItemList">搜索</el-button>
-            <el-button icon="Refresh" size="small" @click="resetItemQuery">重置</el-button>
+            <el-button type="primary" icon="Search" @click="getItemList">搜索</el-button>
+            <el-button icon="Refresh" @click="resetItemQuery">重置</el-button>
           </el-form-item>
         </el-form>
 
         <!-- 明细工具栏 -->
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" size="small" @click="showItemBatchAdd">批量新增明细</el-button>
+            <el-button type="primary" plain icon="Plus" @click="showItemBatchAdd">批量新增明细</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" size="small" :disabled="itemMultiple" @click="handleItemBatchDelete">批量删除</el-button>
+            <el-button type="danger" plain icon="Delete" :disabled="itemMultiple" @click="handleItemBatchDelete">批量删除</el-button>
           </el-col>
         </el-row>
 
@@ -153,7 +153,7 @@
     </el-tabs>
 
     <!-- ==================== BOM 新增/修改弹窗 ==================== -->
-    <el-dialog :title="bomTitle" v-model="bomOpen" width="650px" append-to-body>
+    <el-dialog :title="bomTitle" v-model="bomOpen" width="750px" destroy-on-close append-to-body>
       <el-form ref="bomRef" :model="bomForm" :rules="bomRules" label-width="100px" size="small">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -213,7 +213,7 @@
     </el-dialog>
 
     <!-- ==================== BOM 明细批量新增弹窗 ==================== -->
-    <el-dialog title="批量新增明细" v-model="itemBatchOpen" width="900px" append-to-body>
+    <el-dialog title="批量新增明细" v-model="itemBatchOpen" width="980px" destroy-on-close append-to-body>
       <div style="margin-bottom:10px;">
         <el-button type="primary" size="small" icon="Plus" @click="addItemRow">添加行</el-button>
         <span style="margin-left:12px;color:#909399;font-size:13px;">共 {{ itemBatchRows.length }} 行</span>
@@ -276,7 +276,7 @@
     </el-dialog>
 
     <!-- ==================== BOM 明细单条修改弹窗 ==================== -->
-    <el-dialog title="修改明细" v-model="itemEditOpen" width="700px" append-to-body>
+    <el-dialog title="修改明细" v-model="itemEditOpen" width="750px" destroy-on-close append-to-body>
       <el-form ref="itemEditRef" :model="itemEditForm" :rules="itemEditRules" label-width="100px" size="small">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -452,12 +452,10 @@ function bomRowClassName({ row }) {
 
 /** 列表 */
 function getList() {
-  loading.value = true
   listBom(queryParams.value).then((response) => {
     bomList.value = response.rows || []
     total.value = response.total || 0
-    loading.value = false
-  }).catch(() => { loading.value = false })
+  }).finally(() => { loading.value = false })
 }
 
 /** 选择变化 */
@@ -590,13 +588,17 @@ function resetBomForm() {
   try { proxy.resetForm("bomRef") } catch (e) {}
 }
 
-/** 查看明细 */
+/** 查看明细（带加载状态） */
 function viewItems(row) {
   const bomKey = String(row.masterId || row.id)
   if (!openedBoms.value.find(b => String(b.masterId || b.id) === bomKey)) {
     openedBoms.value.push(row)
   }
+  currentBom.value = row
+  itemLoading.value = true
+  itemQueryParams.value.pageNum = 1
   activeTab.value = "bom_" + bomKey
+  getItemList()
 }
 
 function onTabChange(name) {
@@ -605,10 +607,7 @@ function onTabChange(name) {
   } else if (name.startsWith("bom_")) {
     const bomId = name.replace("bom_", "")
     currentBom.value = openedBoms.value.find(b => String(b.masterId || b.id) === bomId) || null
-    if (currentBom.value) {
-      itemQueryParams.value.pageNum = 1
-      getItemList()
-    }
+    // viewItems 已直接调用 getItemList，此处不再重复
   }
 }
 
@@ -658,14 +657,12 @@ const itemData = reactive({
 const { itemQueryParams, itemEditForm, itemEditRules } = toRefs(itemData)
 
 function getItemList() {
-  if (!currentBom.value) return
+  if (!currentBom.value) { itemLoading.value = false; return }
   itemQueryParams.value.bomId = currentBom.value.masterId || currentBom.value.id
-  itemLoading.value = true
   listBomItem(itemQueryParams.value).then((response) => {
     itemList.value = response.rows || []
     itemTotal.value = response.total || 0
-    itemLoading.value = false
-  }).catch(() => { itemLoading.value = false })
+  }).finally(() => { itemLoading.value = false })
 }
 
 function resetItemQuery() {
