@@ -627,7 +627,10 @@ function onTabChange(name) {
   } else if (name.startsWith("bom_")) {
     const bomId = name.replace("bom_", "")
     currentBom.value = openedBoms.value.find(b => String(b.masterId || b.id) === bomId) || null
-    // viewItems 已直接调用 getItemList，此处不再重复
+    if (currentBom.value) {
+      itemQueryParams.value.pageNum = 1
+      getItemList()
+    }
   }
 }
 
