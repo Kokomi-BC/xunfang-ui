@@ -175,7 +175,9 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="产品族" prop="productFamily">
-              <el-input v-model="bomForm.productFamily" placeholder="请输入产品族" />
+              <el-select v-model="bomForm.productFamily" placeholder="请选择产品族" filterable clearable style="width:100%">
+                <el-option v-for="f in familyList" :key="f.id" :label="f.productFamilyNameCn || f.productFamilyNameEn" :value="f.productFamilyNameCn" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -222,15 +224,15 @@
         <el-table-column label="行号" width="70" align="center">
           <template #default="{ $index }">{{ $index + 1 }}</template>
         </el-table-column>
-        <el-table-column label="Part编码" width="150" align="center">
+        <el-table-column label="Part编码" width="180" align="center">
           <template #default="{ row }">
-            <el-input v-model="row.partCode" placeholder="Part编码" size="small" />
+            <el-select v-model="row.partCode" placeholder="选择Part" size="small" filterable clearable style="width:100%" @change="(v) => onBatchPartSelect(v, row)">
+              <el-option v-for="p in partList" :key="p.id" :label="'PN' + p.id + ' ' + p.partName" :value="'PN' + p.id" />
+            </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="Part名称" width="180" align="center">
-          <template #default="{ row }">
-            <el-input v-model="row.partName" placeholder="Part名称" size="small" />
-          </template>
+        <el-table-column label="Part名称" width="140" align="center" prop="partName">
+          <template #default="{ row }">{{ row.partName || '-' }}</template>
         </el-table-column>
         <el-table-column label="Part类型" width="120" align="center">
           <template #default="{ row }">
@@ -286,14 +288,16 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="Part编码" prop="partCode">
-              <el-input v-model="itemEditForm.partCode" placeholder="Part编码" />
+              <el-select v-model="itemEditForm.partCode" placeholder="选择Part" filterable clearable style="width:100%" @change="(v) => onEditPartSelect(v)">
+                <el-option v-for="p in partList" :key="p.id" :label="'PN' + p.id + ' ' + p.partName" :value="'PN' + p.id" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Part名称" prop="partName">
-              <el-input v-model="itemEditForm.partName" placeholder="Part名称" />
+              <el-input v-model="itemEditForm.partName" placeholder="选择Part后自动填充" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -350,6 +354,8 @@ import {
   delBomItem, delBomItemBatch
 } from "@/api/manufacture/bomItem"
 import { listUnit } from "@/api/manufacture/unit"
+import { listFamily } from "@/api/manufacture/productfamily"
+import { listPart } from "@/api/manufacture/part"
 
 const { proxy } = getCurrentInstance()
 
@@ -372,10 +378,24 @@ const bomStatusDict = [
 ]
 const partTypeDict = ["成品", "半成品", "原材料", "工艺辅料"]
 const unitList = ref([])
+const familyList = ref([])
+const partList = ref([])
 
 function getUnitList() {
   listUnit({ pageNum: 1, pageSize: 999 }).then(res => {
     unitList.value = (res.rows || []).map(u => u.unitCode || u.unitName || u.name).filter(Boolean)
+  }).catch(() => {})
+}
+
+function getFamilyList() {
+  listFamily({ pageNum: 1, pageSize: 999 }).then(res => {
+    familyList.value = res.rows || []
+  }).catch(() => {})
+}
+
+function getPartList() {
+  listPart({ pageNum: 1, pageSize: 9999 }).then(res => {
+    partList.value = res.rows || []
   }).catch(() => {})
 }
 
@@ -690,6 +710,24 @@ function makeEmptyItemRow() {
   }
 }
 
+/** 批量新增：选择Part后自动填充名称/类型 */
+function onBatchPartSelect(val, row) {
+  const p = partList.value.find(x => 'PN' + x.id === val)
+  if (p) {
+    row.partName = p.partName || ''
+    row.partType = p.partType || '原材料'
+  }
+}
+
+/** 单条修改：选择Part后自动填充名称/类型 */
+function onEditPartSelect(val) {
+  const p = partList.value.find(x => 'PN' + x.id === val)
+  if (p) {
+    itemEditForm.value.partName = p.partName || ''
+    itemEditForm.value.partType = p.partType || '原材料'
+  }
+}
+
 function addItemRow() {
   itemBatchRows.value.push(makeEmptyItemRow())
 }
@@ -769,6 +807,8 @@ function handleItemBatchDelete() {
 
 // ==================== 初始化 ====================
 getUnitList()
+getFamilyList()
+getPartList()
 getList()
 </script>
 
